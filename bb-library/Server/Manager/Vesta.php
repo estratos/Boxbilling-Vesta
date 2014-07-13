@@ -115,8 +115,46 @@ return $result ;
 
     public function testConnection()
     {
-        return TRUE;
+      
+
+    
+           
+        // Server credentials
+$vst_username = $this->_config['username'];
+$vst_password = $this->_config['password'];
+$vst_command = 'list-sys-info';
+$vst_returncode = 'yes';
+
+
+// Prepare POST query
+$postvars = array(
+    'user' => $vst_username,
+    'password' => $vst_password,
+    'returncode' => $vst_returncode,
+    'cmd' => $vst_command,
+    'arg1' => $a->getUsername(),
+    
+
+						
+
+);    
+// Make request and check sys info
+
+		$result = $this->_makeRequest($postvars);
+
+// Check result
+if($result == 0) {
+    echo "Conection to server is OK \n";
+  $ret = TRUE;
+} else {
+    echo "Query returned error code: " .$answer. "\n";
+  $ret = false;
+}
+
+     return $ret;
     }
+
+
 
     /**
      * MEthods retrieves information from server, assignes new values to
