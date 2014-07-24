@@ -69,39 +69,37 @@ $host = 'http';
 
     	
     	
+// Server credentials
 
-    	
 
+$params['user'] = $this->_config['username'];
+$params['password'] = $this->_config['password'];
+   	
     	
 // Send POST query via cURL
 $postdata = http_build_query($params);
 $curl = curl_init();
+$timeout = 5;
+
 curl_setopt($curl, CURLOPT_URL, $host);
-
-
 curl_setopt($curl, CURLOPT_RETURNTRANSFER,true);
 curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
 curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
 curl_setopt($curl, CURLOPT_POST, true);
 curl_setopt($curl, CURLOPT_POSTFIELDS, $postdata);
+curl_setopt ($curl, CURLOPT_CONNECTTIMEOUT, $timeout);
 
-$answer = curl_exec($curl);
-// Check result
-if($answer == 0) {
-    echo "User account has been successfuly created\n";
-    $result = TRUE;
-} else {
-     $result = FALSE;
+$result = curl_exec($curl);
 
-    echo "Query returned error code: " .$answer. "\n";
+curl_close($curl);
+		
+		if($result == 0)
+			return true;
+		else
+			return false;
 
-    
-}
-
-return $result ;
 
     }
-
 
 
 
@@ -120,38 +118,33 @@ return $result ;
     
            
         // Server credentials
-$vst_username = $this->_config['username'];
-$vst_password = $this->_config['password'];
-$vst_command = 'list-sys-info';
+$vst_command = 'v-list-sys-info';
 $vst_returncode = 'yes';
 
 
 // Prepare POST query
 $postvars = array(
-    'user' => $vst_username,
-    'password' => $vst_password,
+    
     'returncode' => $vst_returncode,
     'cmd' => $vst_command,
-    'arg1' => $a->getUsername(),
+    'arg1' => '',
+    'arg2' => '',
+    'arg3' =>'',
+    'arg4' =>'',
+    'arg5' =>'',
+    'arg6' =>'',
+    'arg7' =>'',
+    'arg8' =>'',
+    'arg9' =>''		
+
+);
+
     
-
-						
-
-);    
 // Make request and check sys info
 
-		$result = $this->_makeRequest($postvars);
+		return $this->_makeRequest($postvars);
 
-// Check result
-if($result == 0) {
-    echo "Conection to server is OK \n";
-  $ret = TRUE;
-} else {
-    echo "Query returned error code: " .$answer. "\n";
-  $ret = false;
-}
 
-     return $ret;
     }
 
 
@@ -191,8 +184,6 @@ if($result == 0) {
 		
 		$client = $a->getClient();
         // Server credentials
-$vst_username = $this->_config['username'];
-$vst_password = $this->_config['password'];
 $vst_command = 'v-add-user';
 $vst_returncode = 'yes';
 
@@ -203,8 +194,7 @@ $last_name = 'Cohle';
 
 // Prepare POST query
 $postvars = array(
-    'user' => $vst_username,
-    'password' => $vst_password,
+    
     'returncode' => $vst_returncode,
     'cmd' => $vst_command,
     'arg1' => $a->getUsername(),
@@ -212,7 +202,11 @@ $postvars = array(
     'arg3' => $client->getEmail(),
     'arg4' => $package,
     'arg5' => $a->getUsername(),
-    'arg6' => $a->getUsername()
+    'arg6' => $a->getUsername(),
+    'arg7' =>'',
+    'arg8' =>'',
+    'arg9' =>''
+
 
 						
 
@@ -225,14 +219,20 @@ $postvars = array(
 
 // Create Domain Prepare POST query
 $postvars = array(
-    'user' => $vst_username,
-    'password' => $vst_password,
+    
 
     'returncode' => 'yes',
     'cmd' => 'v-add-domain',
     'arg1' => $a->getUsername(),
-    'arg2' => $a->getDomain()
-    
+    'arg2' => $a->getDomain(),
+    'arg3' =>'',
+    'arg4' =>'',
+    'arg5' =>'',
+    'arg6' =>'',
+    'arg7' =>'',
+    'arg8' =>'',
+    'arg9' =>''
+
 );
 
 $result = $this->_makeRequest($postvars);
@@ -255,42 +255,34 @@ $result = $this->_makeRequest($postvars);
 
 
 
-
-           
-        // Server credentials
-$vst_username = $this->_config['username'];
-$vst_password = $this->_config['password'];
-$vst_command = 'v-suspend-user';
-$vst_returncode = 'yes';
-
-
 // Prepare POST query
-$postvars = array(
-    'user' => $vst_username,
-    'password' => $vst_password,
-    'returncode' => $vst_returncode,
-    'cmd' => $vst_command,
+$postvars = array(    
+    'returncode' => 'yes',
+    'cmd' => 'v-suspend-user',
     'arg1' => $a->getUsername(),
+    'arg2' => 'no',
+    'arg3' =>'',
+    'arg4' =>'',
+    'arg5' =>'',
+    'arg6' =>'',
+    'arg7' =>'',
+    'arg8' =>'',
+    'arg9' =>''
     
 
-						
 
 );    
 // Make request and suspend user 
 
-		$result = $this->_makeRequest($postvars);
 
+return $this->_makeRequest($postvars);
 
-
-
-
-
-        if($a->getReseller()) {
-            $this->getLog()->info('Suspending reseller hosting account');
-        } else {
-            $this->getLog()->info('Suspending shared hosting account');
-        }
+        
 	}
+
+
+
+
 
     /**
      * Unsuspend account on server
@@ -302,38 +294,40 @@ $postvars = array(
 
            
         // Server credentials
-$vst_username = $this->_config['username'];
-$vst_password = $this->_config['password'];
 $vst_command = 'v-unsuspend-user';
 $vst_returncode = 'yes';
 
 
 // Prepare POST query
 $postvars = array(
-    'user' => $vst_username,
-    'password' => $vst_password,
+    
     'returncode' => $vst_returncode,
     'cmd' => $vst_command,
     'arg1' => $a->getUsername(),
-    
+    'arg2' => 'no',
+    'arg3' =>'',
+    'arg4' =>'',
+    'arg5' =>'',
+    'arg6' =>'',
+    'arg7' =>'',
+    'arg8' =>'',
+    'arg9' =>''
+		
+);  
+  
+// Make request and unsuspend user 
+// Boxbilling trowing error 505 on this particular action 
+// So is not working anymore on ver 3.6.11
+// Will try  a work arround later
 
-						
+  		
+   
 
-);    
-// Make request and suspend user 
 
-		$result = $this->_makeRequest($postvars);
-
+		return $this->_makeRequest($postvars);
 
 
 
-
-
-        if($a->getReseller()) {
-            $this->getLog()->info('Unsuspending reseller hosting account');
-        } else {
-            $this->getLog()->info('Unsuspending shared hosting account');
-        }
 	}
 
 
@@ -360,17 +354,24 @@ $vst_returncode = 'yes';
 
 // Prepare POST query
 $postvars = array(
-    'user' => $vst_username,
-    'password' => $vst_password,
+    
     'returncode' => $vst_returncode,
     'cmd' => $vst_command,
     'arg1' => $a->getUsername(),
-    
+    'arg2' => '',
+    'arg3' =>'',
+    'arg4' =>'',
+    'arg5' =>'',
+    'arg6' =>'',
+    'arg7' =>'',
+    'arg8' =>'',
+    'arg9' =>''
+
 
 						
 
 );    
-// Make request and suspend user 
+// Make request and delete user 
 
 		$result = $this->_makeRequest($postvars);
 
