@@ -1,4 +1,5 @@
 <?php
+
 /**
  * BoxBilling
  *
@@ -445,11 +446,39 @@ if($a->getReseller()) {
      */
     public function changeAccountPassword(Server_Account $a, $new)
     {
-        if($a->getReseller()) {
-            $this->getLog()->info('Changing reseller hosting account password');
-        } else {
-            $this->getLog()->info('Changing shared hosting account password');
-        }
+        
+
+           
+        // Server credentials
+$vst_username = $this->_config['username'];
+$vst_password = $this->_config['password'];
+$vst_command = 'v-change-user-password';
+$vst_returncode = 'yes';
+
+
+// Prepare POST query
+$postvars = array(
+    
+    'returncode' => $vst_returncode,
+    'cmd' => $vst_command,
+    'arg1' => $a->getUsername(),
+    'arg2' => $a->getPassword()
+			
+
+);    
+// Make request and change password
+
+$result = $this->_makeRequest($postvars);
+
+if($result != '0'){
+throw new Server_Exception('Server Manager Vesta CP Error: Change Password Account Error '.$result);
+}
+
+
+
+        
+return true;
+
     }
 
     /**
