@@ -95,11 +95,9 @@ $result = curl_exec($curl);
 curl_close($curl);
 		
 		if($result == 0)
-			return true;
+			return 0;
 		else
-			return false;
-
-
+			return $result
     }
 
 
@@ -180,6 +178,8 @@ $postvars = array(
 
     {
 
+           
+
            $p = $a->getPackage();
 		$resourcePlan = $p;
 		
@@ -190,8 +190,6 @@ $vst_returncode = 'yes';
 
 // New Account
 $package = 'default';
-$fist_name = 'Rust';
-$last_name = 'Cohle';
 
 // Prepare POST query
 $postvars = array(
@@ -203,43 +201,38 @@ $postvars = array(
     'arg3' => $client->getEmail(),
     'arg4' => $package,
     'arg5' => $a->getUsername(),
-    'arg6' => $a->getUsername(),
-    'arg7' =>'',
-    'arg8' =>'',
-    'arg9' =>''
-
-
-						
+    'arg6' => $a->getUsername()						
 
 );    
 // Make request and create user 
-
-		$result = $this->_makeRequest($postvars);
-
+$result = $this->_makeRequest($postvars);
+if($result == 0)
+{
 		
 
 // Create Domain Prepare POST query
-$postvars = array(
+$postvars2 = array(
     
 
     'returncode' => 'yes',
     'cmd' => 'v-add-domain',
     'arg1' => $a->getUsername(),
-    'arg2' => $a->getDomain(),
-    'arg3' =>'',
-    'arg4' =>'',
-    'arg5' =>'',
-    'arg6' =>'',
-    'arg7' =>'',
-    'arg8' =>'',
-    'arg9' =>''
-
+    'arg2' => $a->getDomain()
 );
 
-$result = $this->_makeRequest($postvars);
+$result2 = $this->_makeRequest($postvars2);
 
+}
 
-	return $result;
+else {throw new Server_Exception('Server Manager Vesta CP Error: User name exists on server, please choose another one '.$result);
+}
+
+if($result2 != '0'){
+throw new Server_Exception('Server Manager Vesta CP Error: Create Domain failure '.$result2);
+}
+
+	return true;
+
 
 
 	}
@@ -316,13 +309,6 @@ $postvars = array(
 		
 );  
   
-// Make request and unsuspend user 
-// Boxbilling trowing error 505 on this particular action 
-// So is not working anymore on ver 3.6.11
-// Will try  a work arround later
-
-  		
-   
 
 
 		return $this->_makeRequest($postvars);
@@ -359,14 +345,7 @@ $postvars = array(
     'returncode' => $vst_returncode,
     'cmd' => $vst_command,
     'arg1' => $a->getUsername(),
-    'arg2' => '',
-    'arg3' =>'',
-    'arg4' =>'',
-    'arg5' =>'',
-    'arg6' =>'',
-    'arg7' =>'',
-    'arg8' =>'',
-    'arg9' =>''
+    'arg2' => 'no'
 
 
 						
