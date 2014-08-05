@@ -97,7 +97,7 @@ curl_close($curl);
 		if($result == 0)
 			return 0;
 		else
-			return $result
+			return $result;
     }
 
 
