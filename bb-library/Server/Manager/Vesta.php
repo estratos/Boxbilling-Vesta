@@ -46,7 +46,14 @@ class Server_Manager_Vesta extends Server_Manager
      */
     public function getLoginUrl()
     {
-        return 'http://www.google.com?q=cpanel';
+
+     $host = 'http';
+		if ($this->_config['secure']) {
+			$host .= 's';
+		}
+		$host .= '://' . $this->_config['host'] . ':'.$this->_config['port'].'/';
+
+        return $host;
     }
 
     /**
@@ -420,11 +427,7 @@ return true;
      */
     public function changeAccountUsername(Server_Account $a, $new)
     {
-        if($a->getReseller()) {
-            $this->getLog()->info('Changing reseller hosting account username');
-        } else {
-            $this->getLog()->info('Changing shared hosting account username');
-        }
+        //not suppourted
     }
 
     /**
