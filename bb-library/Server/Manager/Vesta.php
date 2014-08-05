@@ -374,23 +374,43 @@ return true;
      */
 	public function changeAccountPackage(Server_Account $a, Server_Package $p)
     {
-        if($a->getReseller()) {
-            $this->getLog()->info('Updating reseller hosting account');
-        } else {
-            $this->getLog()->info('Updating shared hosting account');
-        }
         
-        $p->getName();
-        $p->getQuota();
-        $p->getBandwidth();
-        $p->getMaxSubdomains();
-        $p->getMaxParkedDomains();
-        $p->getMaxDomains();
-        $p->getMaxFtp();
-        $p->getMaxSql();
-        $p->getMaxPop();
+
+$package = $a->getPackage()->getName();
+
         
-        $p->getVestaValue('param_name');
+        
+
+// Server credentials
+$vst_username = $this->_config['username'];
+$vst_password = $this->_config['password'];
+$vst_command = 'v-change-user-package';
+$vst_returncode = 'yes';
+
+
+// Prepare POST query
+$postvars = array(
+    
+    'returncode' => $vst_returncode,
+    'cmd' => $vst_command,
+    'arg1' => $a->getUsername(),
+    'arg2' => $package,
+    'arg3' => 'no'
+
+			
+
+);    
+// Make request and change package
+
+		$result = $this->_makeRequest($postvars);
+
+if($result != '0'){
+throw new Server_Exception('Server Manager Vesta CP Error: Change User package Account Error '.$result);
+}
+
+
+return true;
+
 	}
 
     /**
