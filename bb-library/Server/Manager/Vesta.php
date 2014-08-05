@@ -427,7 +427,10 @@ return true;
      */
     public function changeAccountUsername(Server_Account $a, $new)
     {
-        //not suppourted
+        {
+throw new Server_Exception('Server Manager Vesta CP Error: Not Supported');
+}
+
     }
 
     /**
@@ -437,11 +440,10 @@ return true;
      */
     public function changeAccountDomain(Server_Account $a, $new)
     {
-        if($a->getReseller()) {
-            $this->getLog()->info('Changing reseller hosting account domain');
-        } else {
-            $this->getLog()->info('Changing shared hosting account domain');
-        }
+        {
+throw new Server_Exception('Server Manager Vesta CP Error: Not Supported');
+}
+
     }
 
     /**
@@ -467,7 +469,7 @@ $postvars = array(
     'returncode' => $vst_returncode,
     'cmd' => $vst_command,
     'arg1' => $a->getUsername(),
-    'arg2' => $a->getPassword()
+    'arg2' => $new
 			
 
 );    
@@ -493,10 +495,11 @@ return true;
      */
     public function changeAccountIp(Server_Account $a, $new)
     {
-        if($a->getReseller()) {
-            $this->getLog()->info('Changing reseller hosting account ip');
-        } else {
-            $this->getLog()->info('Changing shared hosting account ip');
-        }
+        
+      {
+throw new Server_Exception('Server Manager Vesta CP Error: Not Supported');
+}
+
+
     }
 }
