@@ -354,15 +354,18 @@ $postvars = array(
 // Make request and delete user 
 
 		$result = $this->_makeRequest($postvars);
+if($result != '0'){
+throw new Server_Exception('Server Manager Vesta CP Error: Cancel Account Error '.$result);
+}
 
 
 
-if($a->getReseller()) {
-            $this->getLog()->info('Canceling reseller hosting account');
-        } else {
-            $this->getLog()->info('Canceling shared hosting account');
-        }
+
+return true;
+
 	}
+
+
 
     /**
      * Change account package on server
