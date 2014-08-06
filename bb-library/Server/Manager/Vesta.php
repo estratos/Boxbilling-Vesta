@@ -147,12 +147,20 @@ $postvars = array(
 
     
 // Make request and check sys info
+$result = $this->_makeRequest($postvars);
 
-		return $this->_makeRequest($postvars);
+
+if ($result == 0) {
+    		return true;
+    	} else {
+    		throw new Server_Exception('Connection to server failed');
+    	}
+
+
+		return true;
 
 
     }
-
 
 
     /**
@@ -254,6 +262,11 @@ throw new Server_Exception('Server Manager Vesta CP Error: Create Domain failure
 	public function suspendAccount(Server_Account $a)
     {
 
+// Check if account is suspended
+
+if( $this->_checkAccountSuspended($a->getUsername()) != 'no')
+
+{
 
 
 // Prepare POST query
@@ -275,8 +288,15 @@ $postvars = array(
 );    
 // Make request and suspend user 
 
+$result = $this->_makeRequest($postvars);
 
-return $this->_makeRequest($postvars);
+if($result != '0'){
+throw new Server_Exception('Server Manager Vesta CP Error: Suspend Account Error '.$result);
+}
+
+}
+
+return true;
 
         
 	}
@@ -318,13 +338,17 @@ $postvars = array(
   
 
 
-		return $this->_makeRequest($postvars);
+		$result = $this->_makeRequest($postvars);
+
+if($result != '0'){
+throw new Server_Exception('Server Manager Vesta CP Error: unSuspend Account Error '.$result);
+}
 
 
 
-	}
+return true;
 
-
+}
 	
 
     /**
@@ -361,9 +385,15 @@ $postvars = array(
 // Make request and delete user 
 
 		$result = $this->_makeRequest($postvars);
-if($result != '0'){
-throw new Server_Exception('Server Manager Vesta CP Error: Cancel Account Error '.$result);
+
+if($result == '3'){
+
+return true;
+
 }
+else {if($result != '0'){
+throw new Server_Exception('Server Manager Vesta CP Error: Cancel Account Error '.$result);
+}}
 
 
 
@@ -428,6 +458,36 @@ private function _getPackageName(Server_Package $package)
     }
 
 
+private function _checkAccountSuspended($user)
+    {
+
+
+           
+        // Server credentials
+$vst_username = $this->_config['username'];
+$vst_password = $this->_config['password'];
+$vst_command = 'v-get-user-value';
+$vst_returncode = 'yes';
+
+
+// Prepare POST query
+$postvars = array(
+    
+    'returncode' => $vst_returncode,
+    'cmd' => $vst_command,
+    'arg1' => $user,
+    'arg2' => 'suspended'
+
+
+						
+
+);    
+// Make request and check user 
+
+		$result = $this->_makeRequest($postvars);
+
+return $result;
+}
 
 
     /**
