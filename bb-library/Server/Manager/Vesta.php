@@ -401,7 +401,7 @@ $postvars = array(
     'returncode' => $vst_returncode,
     'cmd' => $vst_command,
     'arg1' => $a->getUsername(),
-    'arg2' => $package,
+    'arg2' => $this->_getPackageName($p),
     'arg3' => 'no'
 
 			
@@ -419,6 +419,16 @@ throw new Server_Exception('Server Manager Vesta CP Error: Change User package A
 return true;
 
 	}
+
+private function _getPackageName(Server_Package $package)
+    {
+        $name = $package->getName();
+        
+        return $name;
+    }
+
+
+
 
     /**
      * Change account username on server
