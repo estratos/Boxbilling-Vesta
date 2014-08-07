@@ -100,10 +100,12 @@ curl_setopt ($curl, CURLOPT_CONNECTTIMEOUT, $timeout);
 $result = curl_exec($curl);
 
 curl_close($curl);
+
+		if(strpos($result, 'Error')!== false){
+throw new Server_Exception('Connection to server failed  '.$result);
+    	}
+
 		
-		if($result == 0)
-			return 0;
-		else
 			return $result;
     }
 
@@ -153,14 +155,18 @@ $postvars = array(
 // Make request and check sys info
 $result = $this->_makeRequest($postvars);
 
+if(strpos($result, 'Error')!== false){
+throw new Server_Exception('Connection to server failed  '.$result);
+    	}
+else {
 
 if ($result == 0) {
     		return true;
     	} else {
-    		throw new Server_Exception('Connection to server failed'.$result);
+    		throw new Server_Exception('Connection to server failed '.$result);
     	}
 
-
+}
 		return true;
 
 
