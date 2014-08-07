@@ -200,15 +200,18 @@ if ($result == 0) {
            
 
            $p = $a->getPackage();
-		$resourcePlan = $p;
+           $packname = $this->_getPackageName($p);
+		
 		
 		$client = $a->getClient();
         // Server credentials
 $vst_command = 'v-add-user';
 $vst_returncode = 'yes';
+$parts = explode(" ", $client->getFullName());
+$lastname = array_pop($parts);
+$firstname = implode(" ", $parts);
 
-// New Account
-$package = 'basico';
+
 
 // Prepare POST query
 $postvars = array(
@@ -218,9 +221,9 @@ $postvars = array(
     'arg1' => $a->getUsername(),
     'arg2' => $a->getPassword(),
     'arg3' => $client->getEmail(),
-    'arg4' => $package,
-    'arg5' => $a->getUsername(),
-    'arg6' => $a->getUsername()						
+    'arg4' => $packname,
+    'arg5' => $firstname,
+    'arg6' => $lastname							
 
 );    
 // Make request and create user 
