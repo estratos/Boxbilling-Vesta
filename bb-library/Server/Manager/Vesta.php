@@ -108,6 +108,15 @@ curl_close($curl);
     }
 
 
+private function _getPackageName(Server_Package $package)
+    {
+        $name = $package->getName();
+        
+        return $name;
+    }
+
+
+
 
     /**
      * This method is called to check if configuration is correct
@@ -117,6 +126,8 @@ curl_close($curl);
      */
 
 
+
+
     public function testConnection()
     {
       
@@ -124,7 +135,7 @@ curl_close($curl);
     
            
         // Server credentials
-$vst_command = 'v-list-sys-info';
+$vst_command = 'v-check-user-password';
 $vst_returncode = 'yes';
 
 
@@ -133,15 +144,8 @@ $postvars = array(
     
     'returncode' => $vst_returncode,
     'cmd' => $vst_command,
-    'arg1' => '',
-    'arg2' => '',
-    'arg3' =>'',
-    'arg4' =>'',
-    'arg5' =>'',
-    'arg6' =>'',
-    'arg7' =>'',
-    'arg8' =>'',
-    'arg9' =>''		
+    'arg1' => $this->_config['username'],
+    'arg2' => $this->_config['password'],
 
 );
 
@@ -153,7 +157,7 @@ $result = $this->_makeRequest($postvars);
 if ($result == 0) {
     		return true;
     	} else {
-    		throw new Server_Exception('Connection to server failed');
+    		throw new Server_Exception('Connection to server failed'.$result);
     	}
 
 
@@ -204,7 +208,7 @@ $vst_command = 'v-add-user';
 $vst_returncode = 'yes';
 
 // New Account
-$package = 'default';
+$package = 'basico';
 
 // Prepare POST query
 $postvars = array(
@@ -261,12 +265,7 @@ throw new Server_Exception('Server Manager Vesta CP Error: Create Domain failure
      */
 	public function suspendAccount(Server_Account $a)
     {
-
-// Check if account is suspended
-
-if( $this->_checkAccountSuspended($a->getUsername()) != 'no')
-
-{
+$user = $a->getUsername();
 
 
 // Prepare POST query
@@ -274,27 +273,24 @@ $postvars = array(
     'returncode' => 'yes',
     'cmd' => 'v-suspend-user',
     'arg1' => $a->getUsername(),
-    'arg2' => 'no',
-    'arg3' =>'',
-    'arg4' =>'',
-    'arg5' =>'',
-    'arg6' =>'',
-    'arg7' =>'',
-    'arg8' =>'',
-    'arg9' =>''
-    
-
-
-);    
+    'arg2' => 'no'  
+                  );    
 // Make request and suspend user 
 
 $result = $this->_makeRequest($postvars);
 
+// Check if error 6 the account is suspended on server
+
+if($result == '6'){
+			return true;
+                 }
+
+
 if($result != '0'){
-throw new Server_Exception('Server Manager Vesta CP Error: Suspend Account Error '.$result);
+throw new Server_Exception('Server Manager Vesta CP Error: Suspend Account Error '.$result.$suspended);
 }
 
-}
+
 
 return true;
 
@@ -450,44 +446,6 @@ return true;
 
 	}
 
-private function _getPackageName(Server_Package $package)
-    {
-        $name = $package->getName();
-        
-        return $name;
-    }
-
-
-private function _checkAccountSuspended($user)
-    {
-
-
-           
-        // Server credentials
-$vst_username = $this->_config['username'];
-$vst_password = $this->_config['password'];
-$vst_command = 'v-get-user-value';
-$vst_returncode = 'yes';
-
-
-// Prepare POST query
-$postvars = array(
-    
-    'returncode' => $vst_returncode,
-    'cmd' => $vst_command,
-    'arg1' => $user,
-    'arg2' => 'suspended'
-
-
-						
-
-);    
-// Make request and check user 
-
-		$result = $this->_makeRequest($postvars);
-
-return $result;
-}
 
 
     /**
