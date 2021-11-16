@@ -1,7 +1,7 @@
 Boxbilling Modules by Estratos
 ==========
 
-Boxbilling Modules 
+Boxbilling Vesta CP Modules 
 
 Tested on ver  3.6.11 released 2013-06-11
 
@@ -17,7 +17,7 @@ This release includes the following acctions via  Vesta API
 
 Files:
 
-Vesta.php must be placed on ../bblibrary/
+Vesta.php must be placed on ../bblibrary/Server/Manager/Vesta.php
 
 
 
